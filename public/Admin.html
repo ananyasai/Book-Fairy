@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head> 
+	<title>Admin Book Fairy</title> 
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+ <!-- <link rel="stylesheet" href="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.css">
+  <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="//code.jquery.com/mobile/1.5.0-alpha.1/jquery.mobile-1.5.0-alpha.1.min.js"></script>-->
+
+
+  <script  src="js/index.js"></script>
+</head> 
+<body>
+
+    <div data-role="page" id="ManageBooks">
+        <div data-role="header">
+                    <table style="width:100%">
+            <tr>
+                <td>
+                    <a href="http://di-com.org"  target="_blank">
+                    <img border="0" src="icon/logo-small.png" alt="Logo, Di-Com" style="float:left;display:inline"/></a>
+                </td>
+                <td>
+                    <h2 align="right">Book Fairy</h2>
+                    <p align="right">v 0.1
+                    <p>
+                </td>
+            </tr>
+        </table>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#ManageBooks" class="ui-btn-active ui-state-persist">Enable Books</a></li>
+                <li><a href="#ManageUsers">Enable Users</a></li>
+                <li><a href="#AddStory">Add Story</a></li>
+            </ul>
+        </div>
+        </div>
+        <div data-role="main" class="ui-content">
+
+            <form method="post" action="https://us-central1-book-fairy.cloudfunctions.net/updateBookStatus" id="storyData">
+            <div id="list"></div>
+            <input type="hidden" name="param" id="param" value="">
+            <input type="submit" data-inline="true" value="Submit">
+            </form>
+        </div>
+        <div data-role="footer">
+            <p>.......Saved</p>
+        </div>
+    </div> 
+    <div data-role="page" id="AddStory">
+        <div data-role="header">
+            <table style="width:100%">
+                <tr>
+                    <td>
+                        <a href="http://di-com.org"  target="_blank">
+                        <img border="0" src="icon/logo-small.png" alt="Logo, Di-Com" style="float:left;display:inline"/></a>
+                    </td>
+                    <td>
+                        <h2 align="right">Book Fairy</h2>
+                        <p align="right">v 0.1
+                        <p>
+                    </td>
+                </tr>
+            </table>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#ManageBooks" >Enable Books</a></li>
+                    <li><a href="#ManageUsers">Enable Users</a></li>
+                    <li><a href="#AddStory" class="ui-btn-active ui-state-persist">Add Story</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="main" class="ui-content">
+            
+            <form method="post" action="https://us-central1-book-fairy.cloudfunctions.net/addStory" id="storyform">
+            <div>               
+                    <label for="Title">Story Title:</label>
+                    <input type="text" name="storyName" id="storyName">
+                    <label for="Category">Category:</label>
+                    <select name="category" id="category" form="storyform">
+                    <option value="Fairy Tales">Fairy Tales</option>
+                    <option value="Fables">Fables</option>
+                    </select>
+                    <label for="Description">Provide the Story Description:</label>
+                    <textarea name="Description" id="Description"></textarea>
+                    <input type="hidden" name="param" id="param" value="">   
+                    <input type="hidden" name="encodedDescription" id="encodedDescription" value="">
+                    <input type="submit" data-inline="true" value="Submit">    
+            </div>
+            </form>
+        </div>
+        <div data-role="footer">
+            <p>.......Saved</p>
+        </div>
+    </div> 
+    <div data-role="page" id="ManageUsers">
+        <div data-role="header">
+                    <table style="width:100%">
+            <tr>
+                <td>
+                    <a href="http://di-com.org"  target="_blank">
+                    <img border="0" src="icon/logo-small.png" alt="Logo, Di-Com" style="float:left;display:inline"/></a>
+                </td>
+                <td>
+                    <h2 align="right">Book Fairy</h2>
+                    <p align="right">v 0.1
+                    <p>
+                </td>
+            </tr>
+        </table>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#ManageBooks" >Enable Books</a></li>
+                <li><a href="#ManageUsers" class="ui-btn-active ui-state-persist">Enable Users</a></li>
+                <li><a href="#AddStory">Add Story</a></li>
+            </ul>
+        </div>
+        </div>
+        <div data-role="main" class="ui-content">
+
+            <form method="post" action="https://us-central1-book-fairy.cloudfunctions.net/enableUsers" id="userData">
+            <div id="list1"></div>
+            <input type="hidden" name="param" id="param" value="">
+            <input type="submit" data-inline="true" value="Submit">
+            </form>
+        </div>
+        <div data-role="footer">
+
+                <p>.......Saved</p>
+
+        </div>
+    </div> 
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Book Fairy Thank You</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<script type="text/javascript">
+function getURLParameter(name) {
+return decodeURI(
+    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+jQuery(document).ready(function(){
+    var code = getURLParameter('ref');
+    $('input[name=param]').val(code);
+});
+
+
+var timer = setTimeout(function() {
+            window.location='https://ananyatadepalli.wixsite.com/bookfairy'
+}, 10000);
+
+
+</script>
+
+</head>
+<body>
+
+<div data-role="page">
+
+    <div data-role="header">
+                <table style="width:100%">
+        <tr>
+          <td>
+              <a href="http://book-fairy.org"  target="_blank">
+              <img border="0" src="icon/logo-small.png" alt="Logo, Di-Com" style="float:left;display:inline"/></a>
+          </td>
+          <td>
+              <h2 align="right">Digital Companion</h2>
+              <p align="right">v 0.1
+              <p>
+          </td>
+        </tr>
+    </table>
+  </div>
+
+  <div data-role="main" class="ui-content">
+<h3>Thankyou for submitting your request, we will contact you as soon as your request is approved</h3>
+
+<h6>Redirecting to our website in 10 seconds ....</h6>
+  </div>
+
+  <div data-role="footer">
+
+  </div>
+</div> 
+
+</body>
+</html>

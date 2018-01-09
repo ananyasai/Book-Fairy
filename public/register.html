@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Book Fairy Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<script type="text/javascript">
+function getURLParameter(name) {
+return decodeURI(
+    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+jQuery(document).ready(function(){
+    var code = getURLParameter('ref');
+    $('input[name=param]').val(code);
+});
+</script>
+
+</head>
+<body>
+
+<div data-role="page">
+
+    <div data-role="header">
+                <table style="width:100%">
+        <tr>
+          <td>
+              <a href="http://book-fairy.org"  target="_blank">
+              <img border="0" src="icon/logo-small.png" alt="Logo, Di-Com" style="float:left;display:inline"/></a>
+          </td>
+          <td>
+              <h2 align="right">Book Fairy</h2>
+              <p align="right">v 0.1
+              <p>
+          </td>
+        </tr>
+    </table>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <form method="post" action="https://us-central1-book-fairy.cloudfunctions.net/RegisterEmail">
+      <div class="ui-field-contain">
+        <label for="fname">First name:</label>
+        <input type="text" name="fname" id="fname">
+        <label for="lname">Last name:</label>
+        <input type="text" name="lname" id="lname">
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email">
+        <label for="purpose">Purpose:</label>
+        <input type="text" name="purpose" id="purpose">
+        <input type="hidden" name="param" id="param" value="">
+      </div>
+      <input type="submit" data-inline="true" value="Submit">
+    </form>
+  </div>
+
+  <div data-role="footer">
+
+  </div>
+</div> 
+
+</body>
+</html>
