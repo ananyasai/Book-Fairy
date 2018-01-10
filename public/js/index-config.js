@@ -49,7 +49,13 @@ $(window).resize(function(){
 
 
 });
+$(window).click(function(e) {
 
+    if (e.target.type == "checkbox"){
+        $('p').hide(); 
+    }
+    
+});
 function getUrlVars(){
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
