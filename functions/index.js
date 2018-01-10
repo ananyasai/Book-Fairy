@@ -82,20 +82,32 @@ function checkIfUserExists(userId, request, response) {
       console.log(snapshot.val().profile.enabled);
       //Check is the user is enabled
       isEnabled = snapshot.val().profile.enabled;
+      userExistsCallback(userId, exists, isEnabled, request, response);
     } else {
       //Check if autoRegistration is enabled
-      if (functions.config().auto.registration) {
+      console.log('functions.config().auto.registration: '+functions.config().auto.registration)
+      if (functions.config().auto.registration == "true") {
         var usersRef = admin.database().ref('/Users');
         console.log('automatically Creating user');
 
-        usersRef.child(userId).set({profile: {id: userId, fname: 'req.body.fname', lname: 'req.body.lname', email: 'req.body.email', enabled: true}})
+        usersRef.child(userId).set({profile: {id: userId, fname: 'req.body.fname', lname: 'req.body.lname', email: 'req.body.email', enabled: true}}, function(error) {
+          if (error) {
+            console.log('updatefailed', err);
+          } else {
+            isEnabled = true; 
+            exists = true;
+            userExistsCallback(userId, exists, isEnabled, request, response);
+          }
+        });
+        /*
         .catch(function (err) {
             console.log('updatefailed', err)
-        });  
-        isEnabled = true;      
+        });  */
+        //isEnabled = true;      
+      } else {
+        userExistsCallback(userId, exists, isEnabled, request, response);
       }
-    }
-    userExistsCallback(userId, exists, isEnabled, request, response);
+    }    
   });
 }
 
@@ -631,6 +643,7 @@ exports.RegisterEmail   = functions.https.onRequest((req, res) => {
     });
     console.log('user Created');
     //create the book content records for the user
+    /*
     var usersBooksRef = admin.database().ref('/UsersBooks');
 
     ref.orderByChild("enabled").equalTo(true).once('value').then(function(snapshot) {
@@ -641,21 +654,21 @@ exports.RegisterEmail   = functions.https.onRequest((req, res) => {
       var bookNew = storyData.map( x => {
           x.Read = false;
           return x
-        }); 
-      console.log('bookNew: '+ bookNew);
-      usersBooksRef.child(user).set({book: bookNew})
-        .catch(function (err) {
-          console.log('Create Book for User failed', err)
-      });   
-    }).then(() => {
-      /*
-      usersBooksRef.child(user).set({book: bookNew})
-        .catch(function (err) {
-          console.log('Create Book for User failed', err)
-        }); 
+      }); 
+      var userStoryRef = admin.database().ref('/UsersBooks/'+user+'/book');
+      for ( var i=0; i < bookNew.length; i++  ) {
+        userStoryRef.child(bookNew[i].id).set(bookNew[i])
+          .catch(function (err) {
+            console.log('Create Book for User failed', err)
+        });  
+      }
+      //console.log('bookNew: '+ bookNew);
+      //var userStoryRef = admin.database().ref('/UsersBooks/'+user+'/book');
+      
+      //usersBooksRef.child(user).set({book: bookNew})
       */
-    });        
-    console.log('userBooks Created');
+         
+    //console.log('userBooks Created');
     res.redirect('https://book-fairy.firebaseapp.com/thankyou.html')
 
 });
@@ -887,7 +900,7 @@ exports.enableUsers = functions.https.onRequest((req, res) => {
 //functions to handle encryption and decryption
 //exports.check = check;
 
-//db trigger
+//db trigger for adding new stories to all users
 exports.updateUserStories = functions.database.ref('/story-list/{storyId}')
     .onWrite(event => {
       // Grab the current value of what was written to the Realtime Database.
@@ -911,7 +924,37 @@ exports.updateUserStories = functions.database.ref('/story-list/{storyId}')
       //event.data.ref.parent.child('uppercase').set(uppercase);
     });
 
-
+//db trigger for adding existing stories to new user
+exports.addUserStories = functions.database.ref('/Users/{userId}')
+    .onCreate(event => {
+      // Grab the current value of what was written to the Realtime Database.
+      const user = event.data.val();
+      console.log('user created: '+ JSON.stringify(user));
+      var BookRef = admin.database().ref('/story-list');
+      BookRef.orderByChild("enabled").equalTo(true).once('value').then(function(snapshot) {
+        var myStories = snapshot.val();
+        var userBookRef = admin.database().ref('/UsersBooks'); 
+        console.log('userid: '+ user.profile.id)      
+        userBookRef.child(user.profile.id).set({book: myStories});        
+      });
+      /*
+      if (story.enabled) {
+        var userBookRef = admin.database().ref('/UsersBooks');
+        userBookRef.once('value').then(function(snapshot) {
+          var users = snapshot.val();
+          var userIds = Object.keys(users);
+          console.log('Number of users: '+userIds.length);
+          for ( var i=0; i < userIds.length; i++  ) {
+            console.log('userId: '+userIds[i]);
+            var userStoryRef = admin.database().ref('/UsersBooks/'+userIds[i]+'/book');
+            story.Read = false;
+            userStoryRef.child(story.id).set(story);
+          }
+        });
+      }*/
+      return null
+      //event.data.ref.parent.child('uppercase').set(uppercase);
+    });
 var crypto = require('crypto');
 
 var encrypt = function encrypt(input, password) {
