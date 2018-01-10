@@ -62,12 +62,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   var key = functions.config().my.token;
   const app = new DialogflowApp({request: request, response: response});
 
-  var id = app.getUser().userId;
-  console.log('calling user: '+id);
+  var id = app.getUser().userId;//Get the userID of the user in Google Assistant 
+  console.log('calling user: '+id); //Writes UserID to the log
 
-  checkIfUserExists(id, request, response);
+  checkIfUserExists(id, request, response); // Makes sure that this UserID exists
 });
 
+//This function checks if user exists or not
 function checkIfUserExists(userId, request, response) {
   //Get a reference to the User store
   var refUsers = db.ref("/Users");
@@ -209,7 +210,7 @@ function processV1Request (request, response) {
       refUsers.child(userId).once('value', function(snapshot) {
         console.log(snapshot.val());
         if(!snapshot.val().profile.admin){
-          res.status(200).send('You are not authorized to add story');
+          res.status(200).send('You are not authorized to administer');
           return null        
         }
       });
@@ -218,8 +219,8 @@ function processV1Request (request, response) {
      
       if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
           app.tell(app.buildRichResponse()
-          .addSimpleResponse(`Please follow the link to configure your book`)
-          .addBasicCard(app.buildBasicCard('Configure')
+          .addSimpleResponse(`Please follow the link to configure the application`)
+          .addBasicCard(app.buildBasicCard('Administer')
           .addButton(ADMIN_OUT_TEXT, ADMIN_LINK+encryptedStr)), NO_INPUTS);
       } else {
           app.tell(`<speak>Please follow the link to configure your book</speak> ${ADMIN_LINK}${id}`, NO_INPUTS);
@@ -229,13 +230,12 @@ function processV1Request (request, response) {
     'input.yes': () => {
       var userId = app.getUser().userId;
       var refUserBooks = db.ref('/UsersBooks/' + userId +'/book')
-      // Check if the session already has some stories
-      //if (app.data.stories == null) {
+
       //Get the the stories from db
       refUserBooks.orderByChild("Read").equalTo(false).once('value').then(function(snapshot) {
         var exists = (snapshot.val() !== null);
         if (!exists){
-          story = 'You have heard all my stories. To listen to same stories say of type config';
+          story = 'You have heard all my stories. To listen to the same stories say of type config';
           if (requestSource === googleAssistantRequest) {
             sendGoogleResponse(story); // Send simple response to user
           } else {
@@ -248,9 +248,10 @@ function processV1Request (request, response) {
           var storyNames = storyData.map(a => a.id);
           app.data.stories = storyNames;
           stories = app.data.stories;
-          var index = Math.round(getRandom(0, stories.length - 1));
+          var index = Math.round(getRandom(0, stories.length - 1)); //Get a random story ID
           console.log(storyData[index]);
           console.log(storyData[index].Description);
+          //Construct story content
           story = 'Here is a story for you. ' + storyData[index].Description + ' Would you like to listen to another story? You may say Yes or No.';
           console.log(story);
           stories.splice(index, 1);
@@ -877,6 +878,7 @@ exports.enableUsers = functions.https.onRequest((req, res) => {
       for (var i = 0; i < userData.length; i++) {
         console.log(userData[i].profile.id);
         console.log(myUserStatus.hasOwnProperty(userData[i].profile.id));
+        // Check if the user is part of the enabled users list
         if (myUserStatus[userData[i].profile.id]){
           userData[i].profile.enabled = true;
         } else {
@@ -955,7 +957,10 @@ exports.addUserStories = functions.database.ref('/Users/{userId}')
       return null
       //event.data.ref.parent.child('uppercase').set(uppercase);
     });
-var crypto = require('crypto');
+
+
+//Function required for encryption
+    var crypto = require('crypto');
 
 var encrypt = function encrypt(input, password) {
         var key = generateKey(password);

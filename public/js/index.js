@@ -25,7 +25,7 @@ console.log(snapshot);
 
 var users = JSON.parse(snapshot).users;
 var stories = JSON.parse(snapshot).stories;
-
+//This function lists all the stories
 for (i = 0; i < stories.length; i++) { 
     var newdiv = document.createElement('div');
     if (stories[i].enabled){
@@ -39,7 +39,7 @@ for (i = 0; i < stories.length; i++) {
 }
 
 
-
+//This function lists all the users
 for (i = 0; i < users.length; i++) { 
     var newdiv = document.createElement('div');
     if (users[i].enabled){
