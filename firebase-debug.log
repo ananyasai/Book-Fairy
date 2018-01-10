@@ -1,0 +1,112 @@
+[debug] [2018-01-10T06:23:23.251Z] ----------------------------------------------------------------------
+[debug] [2018-01-10T06:23:23.251Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Ananya\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy --only functions
+[debug] [2018-01-10T06:23:23.251Z] CLI Version:   3.16.0
+[debug] [2018-01-10T06:23:23.251Z] Platform:      win32
+[debug] [2018-01-10T06:23:23.251Z] Node Version:  v6.11.5
+[debug] [2018-01-10T06:23:23.251Z] Time:          Wed Jan 10 2018 01:23:23 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:23.251Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-01-10T06:23:23.266Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-01-10T06:23:23.266Z] > authorizing via signed-in user
+[debug] [2018-01-10T06:23:23.266Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/book-fairy  
+  
+ Wed Jan 10 2018 01:23:23 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:23.613Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:23:23.629Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/book-fairy/tokens  
+  
+ Wed Jan 10 2018 01:23:23 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:24.138Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'book-fairy'...
+[info] 
+[info] i  deploying functions
+[debug] [2018-01-10T06:23:24.531Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache Version 2.0",
+  "author": "Ananya",
+  "engines": {
+    "node": "~6.0"
+  },
+  "scripts": {
+    "start": "firebase serve --only functions:dialogflowFirebaseFulfillment",
+    "deploy": "firebase deploy --only functions:dialogflowFirebaseFulfillment"
+  },
+  "dependencies": {
+    "@google-cloud/language": "^0.10.6",
+    "@google-cloud/storage": "^1.5.1",
+    "actions-on-google": "^1.5.x",
+    "apiai": "^4.0.3",
+    "child-process-promise": "^2.2.1",
+    "cors": "^2.8.4",
+    "firebase-admin": "^4.1.4",
+    "firebase-functions": "^0.5.9",
+    "formidable": "^1.1.1",
+    "nodemailer": "^4.0.1"
+  }
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-01-10T06:23:24.532Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/book-fairy?view=CONSUMER_VIEW  
+  
+ Wed Jan 10 2018 01:23:24 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:24.534Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/book-fairy?view=CONSUMER_VIEW  
+  
+ Wed Jan 10 2018 01:23:24 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:25.025Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:23:25.065Z] <<< HTTP RESPONSE 200
+[info] +  functions: all necessary APIs are enabled
+[debug] [2018-01-10T06:23:25.067Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/book-fairy  
+  
+ Wed Jan 10 2018 01:23:25 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:25.067Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/book-fairy/apiKeys  
+  
+ Wed Jan 10 2018 01:23:25 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:23:25.199Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:23:29.586Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-01-10T06:24:10.387Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.556Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.571Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/auto/variables  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.571Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/my/variables  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.571Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/gmail/variables  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.696Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.696Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/auto/variables/key  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.696Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/auto/variables/registration  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.727Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.727Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/my/variables/key  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.727Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/my/variables/token  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.821Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.821Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/gmail/variables/password  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.821Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/gmail/variables/email  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.821Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/book-fairy/configs/gmail/variables/key  
+  
+ Wed Jan 10 2018 01:24:10 GMT-0500 (Eastern Standard Time)
+[debug] [2018-01-10T06:24:10.851Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.873Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.885Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.937Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:10.968Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:11.015Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-10T06:24:11.046Z] <<< HTTP RESPONSE 200

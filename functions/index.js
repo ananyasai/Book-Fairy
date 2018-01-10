@@ -236,6 +236,14 @@ function processV1Request (request, response) {
         var exists = (snapshot.val() !== null);
         if (!exists){
           story = 'You have heard all my stories. To listen to the same stories say of type config';
+          /*
+          if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
+            app.tell(app.buildRichResponse()
+            .addSimpleResponse(story), NO_INPUTS);
+          } else {
+            app.tell(story, NO_INPUTS);
+          }
+          */
           if (requestSource === googleAssistantRequest) {
             sendGoogleResponse(story); // Send simple response to user
           } else {
