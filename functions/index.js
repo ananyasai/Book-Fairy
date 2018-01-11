@@ -276,6 +276,16 @@ function processV1Request (request, response) {
           } 
         }
       });     
+    
+    
+    },
+    'input.sleep': () => {
+      // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
+      if (requestSource === googleAssistantRequest) {
+        sendGoogleResponse('Ok, Good Night. See you later.'); // Send simple response to user
+      } else {
+        sendResponse('Ok, Good Night. See you later.'); // Send simple response to user
+      }
     },    
     // The default fallback intent has been matched, try to recover (https://dialogflow.com/docs/intents#fallback_intents)
     'input.unknown': () => {

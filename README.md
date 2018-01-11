@@ -8,7 +8,6 @@ firebase login
 
 ### Steps
 1. Deploy functions: 
-   cd function
    firebase deploy --only functions
 2. Deploy Hosting
    In the root of the repo
