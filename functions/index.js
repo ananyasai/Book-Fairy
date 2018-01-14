@@ -31,6 +31,9 @@ const CONFIGURE_OUT_TEXT = "Configure"
 const ADMIN_LINK = 'https://book-fairy.firebaseapp.com/Admin.html?ref=';
 const ADMIN_OUT_TEXT = "Administer"
 
+const preText = '<speak><p>Here is a story for you.<break time="1s"/></p>'
+const postText = '<p>Would you like to listen to another story? You may say Yes or No. </p></speak>'
+
 const NO_INPUTS = [
   'I didn\'t hear that.',
   'If you\'re still there, say that again.',
@@ -52,7 +55,21 @@ var getRandom = function(min, max) {
   return Math.random() * (max - min) + min;
 };
 
-
+function format_time(date_obj) {
+  // formats a javascript Date object into a 12h AM/PM time string
+  var hour = date_obj.getHours();
+  var minute = date_obj.getMinutes();
+  var amPM = (hour > 11) ? "pm" : "am";
+  if(hour > 12) {
+    hour -= 12;
+  } else if(hour == 0) {
+    hour = "12";
+  }
+  if(minute < 10) {
+    minute = "0" + minute;
+  }
+  return hour + ":" + minute + amPM;
+}
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
@@ -127,12 +144,25 @@ function userExistsCallback(userId, exists, enabled, request, response) {
     } else {
       const assistant = new DialogflowApp({request: request, response: response});
       //console.log('Encrypted value: ' + encryptedStr);   
-      
+      const sorry = `
+                     <speak>
+                        <par>
+                          <media xml:id="question" begin="0.5s">
+                            <speak><p>Hello! </p><Break /><p>Your  account is not enabled. </p><Break /><p>Please try again later.</p></speak>
+                          </media>
+                          <media repeatCount="3" soundLevel="+2.28dB"
+                            fadeInDur="2s" fadeOutDur="0.2s">
+                            <audio src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"/>
+                          </media>
+                        </par>
+                    </speak>
+                    `;
+      console.log('sorry: '+sorry);
       if (assistant.hasSurfaceCapability(assistant.SurfaceCapabilities.SCREEN_OUTPUT)) {
           assistant.tell(assistant.buildRichResponse()
-          .addSimpleResponse(`Your  account is not enabled. Please try again later`), NO_INPUTS);
+          .addSimpleResponse(sorry), NO_INPUTS);
       } else {
-          assistant.tell(`<speak>Your  account is not enabled. Please try again later</speak>`, NO_INPUTS);
+          assistant.tell(sorry, NO_INPUTS);
       }         
     }
    
@@ -150,7 +180,7 @@ function userExistsCallback(userId, exists, enabled, request, response) {
         .addBasicCard(assistant.buildBasicCard('register')
         .addButton(REGISTER_OUT_TEXT, REGISTER_LINK+encryptedStr)), NO_INPUTS);
     } else {
-        assistant.tell(`<speak>Please follow the link to register</speak> ${REGISTER_LINK}${id}`, NO_INPUTS);
+        assistant.tell(`<speak>Please follow the link to register</speak> ${REGISTER_LINK}${encryptedStr}`, NO_INPUTS);
     }   
   }
 }
@@ -166,6 +196,7 @@ function processV1Request (request, response) {
   let requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
   const googleAssistantRequest = 'google'; // Constant to identify Google Assistant requests
   const app = new DialogflowApp({request: request, response: response});
+  
   // Create handlers for Dialogflow actions as well as a 'default' handler
   const actionHandlers = {
     // The default welcome intent has been matched, welcome the user (https://dialogflow.com/docs/events#default_welcome_intent)
@@ -260,7 +291,21 @@ function processV1Request (request, response) {
           console.log(storyData[index]);
           console.log(storyData[index].Description);
           //Construct story content
-          story = 'Here is a story for you. ' + storyData[index].Description + ' Would you like to listen to another story? You may say Yes or No.';
+          if( storyData[index].Description.indexOf('<speak>') >= 0){
+              console.log("found speak ");
+              //remove json escape characters
+              var storyOriginal = decodeURIComponent(storyData[index].Description);
+              //remove <speak> tag
+              var step1 = storyOriginal.replace('<speak>','');
+              //remove </speak> tag
+              var step2 = step1.replace('</speak>','');
+              //add pre and post text
+              var story = preText + step2 + postText;   
+          } else {
+            story = 'Here is a story for you. ' + storyData[index].Description + ' Would you like to listen to another story? You may say Yes or No.';
+          }
+
+
           console.log(story);
           stories.splice(index, 1);
           app.data.stories = stories;   
@@ -281,6 +326,10 @@ function processV1Request (request, response) {
     },
     'input.sleep': () => {
       // Use the Actions on Google lib to respond to Google requests; for other requests use JSON
+      console.log('Timestamp: '+request.body.timestamp);
+      var DateObj = new Date(request.body.timestamp);
+      console.log('Time: '+format_time(DateObj));
+      
       if (requestSource === googleAssistantRequest) {
         sendGoogleResponse('Ok, Good Night. See you later.'); // Send simple response to user
       } else {
@@ -630,7 +679,8 @@ exports.addStory = functions.https.onRequest((req, res) => {
 //Send an email to admin when users request to be added
 exports.RegisterEmail   = functions.https.onRequest((req, res) => {
     console.log(req.body)
-    const email = 'ananyatadepalli@gmail.com'
+    //const email = 'ananyatadepalli@gmail.com'
+    const email = 'contact.bookfairy@gmail.com';
     const APP_NAME = 'Book-Fairy';
     const EncryptedUser = req.body.param;
     var password = functions.config().my.token;
@@ -646,13 +696,40 @@ exports.RegisterEmail   = functions.https.onRequest((req, res) => {
     mailOptions.subject = `New Request from ${req.body.fname} ${req.body.lname}!`;
 
     //console.log(mailOptions.subject);
-    mailOptions.text = `Hey new user request receive. ${JSON.stringify(req.body)}  userId=${user}`;
+    mailOptions.text = `Hey new user request received. ${JSON.stringify(req.body)}  userId=${user}`;
     //console.log(mailOptions.test);
     const mailTransport = nodemailer.createTransport(`smtps://${gmailEmail}:${gmailPassword}@smtp.gmail.com`);
 
     mailTransport.sendMail(mailOptions).then(() => {
       console.log('New welcome email sent to:', email);
     });
+
+    // send mail to requestor
+    
+    if (ValidateEmail(req.body.email)) {
+      const emailTo = req.body.email;
+      //const emailTo = 'ananyatadepalli@gmail.com';
+      const mailOptionsTo = {
+        from: `${APP_NAME} <noreply@book-fairy.org>`,
+        to: emailTo
+      };
+      mailOptionsTo.subject = 'Welcome to Book-Fairy'
+      mailOptionsTo.html = `
+                            <p>Dear ${req.body.fname},</p>
+                            <BR>
+                            <p>Thank you very much for showing interest in <a href="https://ananyatadepalli.wixsite.com/bookfairy">Book-Fairy</a>.</p>
+                            <BR>
+                            <p>Book-Fairy is an experimental product being developed by us to provide the benefits of bed-time stories to young kids. While everyone recognizes the importance of bed-time story telling, very little is being done to help kids who miss this. </p>
+                            <BR>
+                            <p>Please let us know by return email if you would like to try the product and provide your valuable feedback.</p>
+                            <BR>
+                            <p>Regards</p>
+                            <p>BookFairy Support</p>`;
+      
+      mailTransport.sendMail(mailOptionsTo).then(() => {
+        console.log('New welcome email sent to:', emailTo);
+      });
+    }
     //create the user record
     var usersRef = admin.database().ref('/Users');
 
@@ -1028,3 +1105,14 @@ var generateInitializationVector = function generateInitializationVector(passwor
     //console.log('initializationVector: '+initializationVector);
     return initializationVector;
 }
+
+//check if the email field has value in the valid format
+function ValidateEmail(email)   
+{  
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)  )
+  {  
+    return (true)  
+  }  
+    return (false)  
+}  
+
