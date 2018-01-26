@@ -11,7 +11,7 @@ firebase login
    firebase deploy --only functions
 2. Deploy Hosting
    In the root of the repo
-   firebase deploy --only hostung
+   firebase deploy --only hosting
 
 ### set and unset keys
 firebase functions:config:set someservice.key="THE API KEY" someservice.id="THE CLIENT ID"

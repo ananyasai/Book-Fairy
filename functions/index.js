@@ -662,6 +662,7 @@ exports.addStory = functions.https.onRequest((req, res) => {
 
   var newStory = req.body;
   newStory.enabled = false;
+  newStory.Read = false;
   newStory.id = newStory.storyName.replace(/ /g,"_");
   delete newStory.param;
   var bookRef = admin.database().ref('/story-list');
@@ -692,7 +693,7 @@ exports.RegisterEmail   = functions.https.onRequest((req, res) => {
       to: email
     };
 
-  // The user subscribed to the newsletter.
+
     mailOptions.subject = `New Request from ${req.body.fname} ${req.body.lname}!`;
 
     //console.log(mailOptions.subject);
@@ -728,6 +729,12 @@ exports.RegisterEmail   = functions.https.onRequest((req, res) => {
       
       mailTransport.sendMail(mailOptionsTo).then(() => {
         console.log('New welcome email sent to:', emailTo);
+      });
+    } else {
+      mailOptions.text = `failed to send email to ${req.body.email}`;
+      mailOptions.subject = `Failed to send email`;
+      mailTransport.sendMail(mailOptions).then(() => {
+        console.log('New error email sent to:', email);
       });
     }
     //create the user record
