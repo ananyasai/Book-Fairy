@@ -266,7 +266,7 @@ function processV1Request (request, response) {
       refUserBooks.orderByChild("Read").equalTo(false).once('value').then(function(snapshot) {
         var exists = (snapshot.val() !== null);
         if (!exists){
-          story = 'You have heard all my stories. To listen to the same stories say of type config';
+          story = 'You have heard all my stories. To listen to the same stories say or type config';
           /*
           if (app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT)) {
             app.tell(app.buildRichResponse()
